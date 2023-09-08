@@ -1,7 +1,12 @@
 package com.example.community;
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.example.community.dto.PaginationDTO;
+import com.example.community.mapper.QuestionMapper;
 import com.example.community.mapper.UserMapper;
+import com.example.community.model.Question;
 import com.example.community.model.User;
+import com.example.community.service.QuestionService;
 import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,13 +20,21 @@ import org.springframework.test.context.junit4.SpringRunner;
 import javax.sql.DataSource;
 import java.math.BigInteger;
 import java.sql.SQLException;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @SpringBootTest
 @RunWith(SpringRunner.class)
 class CommunityApplicationTests {
     @Autowired
     private UserMapper userMapper;
+
+    @Autowired
+    private QuestionMapper questionMapper;
+
+    @Autowired
+    private QuestionService questionService;
 
     @Test
     void contextLoads() {
@@ -30,15 +43,18 @@ class CommunityApplicationTests {
 
     @Test
     void testSelect() throws SQLException {
-        List<User> userList = userMapper.selectList(null);
-        System.out.println(userList.size());
-        for (User user : userList
-             ) {
-            System.out.println(user);
-            String name = user.getName();
-            System.out.println(name);
+        QueryWrapper<Question> wrapper = new QueryWrapper<>();
+        Integer offset = 1;
+        Integer size = 5;
+//        wrapper.between("id",offset,offset + size - 1);
+//        List<Question> questions = questionMapper.selectList(wrapper);
+//        Long totalCount = questionMapper.selectCount(null);
+//        Integer num = 1;
+//        System.out.println(totalCount-num);
+//        System.out.println(questions.size());
 
-        }
+        PaginationDTO pagination = questionService.list(offset,size);
+        System.out.println(pagination.getQuestions().size());
     }
 
     @Test
